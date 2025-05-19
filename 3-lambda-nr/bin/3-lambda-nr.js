@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("source-map-support/register");
+const cdk = require("aws-cdk-lib");
+const _3_lambda_nr_stack_1 = require("../lib/3-lambda-nr-stack");
+const app = new cdk.App();
+// Get environment context or use defaults
+const environment = app.node.tryGetContext('environment') || 'development';
+const region = app.node.tryGetContext('region') || process.env.CDK_DEFAULT_REGION || 'us-east-1';
+const account = app.node.tryGetContext('account') || process.env.CDK_DEFAULT_ACCOUNT;
+// Create stack with environment-specific name
+new _3_lambda_nr_stack_1.NRLambdaWorkshopStack(app, `NRLambdaWorkshop-${environment}`, {
+    env: {
+        account: account,
+        region: region
+    },
+    description: `NR Instrumented Lambda Fns - ${environment} environment`,
+    // Add stack tags for better resource management
+    tags: {
+        Environment: environment,
+        Project: 'NRLambdaWorkshop',
+        ManagedBy: 'CDK',
+        Workshop: "AWS CDK ADOT Workshop",
+    }
+});
+// Log deployment information
+console.log(`Deploying NRLambdaWorkshop to ${environment} environment in ${region}`);
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMy1sYW1iZGEtbnIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIzLWxhbWJkYS1uci50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7QUFDQSx1Q0FBcUM7QUFDckMsbUNBQW1DO0FBQ25DLGlFQUFpRTtBQUVqRSxNQUFNLEdBQUcsR0FBRyxJQUFJLEdBQUcsQ0FBQyxHQUFHLEVBQUUsQ0FBQztBQUUxQiwwQ0FBMEM7QUFDMUMsTUFBTSxXQUFXLEdBQUcsR0FBRyxDQUFDLElBQUksQ0FBQyxhQUFhLENBQUMsYUFBYSxDQUFDLElBQUksYUFBYSxDQUFDO0FBQzNFLE1BQU0sTUFBTSxHQUFHLEdBQUcsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLFFBQVEsQ0FBQyxJQUFJLE9BQU8sQ0FBQyxHQUFHLENBQUMsa0JBQWtCLElBQUksV0FBVyxDQUFDO0FBQ2pHLE1BQU0sT0FBTyxHQUFHLEdBQUcsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLFNBQVMsQ0FBQyxJQUFJLE9BQU8sQ0FBQyxHQUFHLENBQUMsbUJBQW1CLENBQUM7QUFFckYsOENBQThDO0FBQzlDLElBQUksMENBQXFCLENBQUMsR0FBRyxFQUFFLG9CQUFvQixXQUFXLEVBQUUsRUFBRTtJQUNoRSxHQUFHLEVBQUU7UUFDSCxPQUFPLEVBQUUsT0FBTztRQUNoQixNQUFNLEVBQUUsTUFBTTtLQUNmO0lBQ0QsV0FBVyxFQUFFLGdDQUFnQyxXQUFXLGNBQWM7SUFDdEUsZ0RBQWdEO0lBQ2hELElBQUksRUFBRTtRQUNKLFdBQVcsRUFBRSxXQUFXO1FBQ3hCLE9BQU8sRUFBRSxrQkFBa0I7UUFDM0IsU0FBUyxFQUFFLEtBQUs7UUFDaEIsUUFBUSxFQUFFLHVCQUF1QjtLQUNsQztDQUNGLENBQUMsQ0FBQztBQUVILDZCQUE2QjtBQUM3QixPQUFPLENBQUMsR0FBRyxDQUFDLGlDQUFpQyxXQUFXLG1CQUFtQixNQUFNLEVBQUUsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiIyEvdXNyL2Jpbi9lbnYgbm9kZVxuaW1wb3J0ICdzb3VyY2UtbWFwLXN1cHBvcnQvcmVnaXN0ZXInO1xuaW1wb3J0ICogYXMgY2RrIGZyb20gJ2F3cy1jZGstbGliJztcbmltcG9ydCB7IE5STGFtYmRhV29ya3Nob3BTdGFjayB9IGZyb20gJy4uL2xpYi8zLWxhbWJkYS1uci1zdGFjayc7XG5cbmNvbnN0IGFwcCA9IG5ldyBjZGsuQXBwKCk7XG5cbi8vIEdldCBlbnZpcm9ubWVudCBjb250ZXh0IG9yIHVzZSBkZWZhdWx0c1xuY29uc3QgZW52aXJvbm1lbnQgPSBhcHAubm9kZS50cnlHZXRDb250ZXh0KCdlbnZpcm9ubWVudCcpIHx8ICdkZXZlbG9wbWVudCc7XG5jb25zdCByZWdpb24gPSBhcHAubm9kZS50cnlHZXRDb250ZXh0KCdyZWdpb24nKSB8fCBwcm9jZXNzLmVudi5DREtfREVGQVVMVF9SRUdJT04gfHwgJ3VzLWVhc3QtMSc7XG5jb25zdCBhY2NvdW50ID0gYXBwLm5vZGUudHJ5R2V0Q29udGV4dCgnYWNjb3VudCcpIHx8IHByb2Nlc3MuZW52LkNES19ERUZBVUxUX0FDQ09VTlQ7XG5cbi8vIENyZWF0ZSBzdGFjayB3aXRoIGVudmlyb25tZW50LXNwZWNpZmljIG5hbWVcbm5ldyBOUkxhbWJkYVdvcmtzaG9wU3RhY2soYXBwLCBgTlJMYW1iZGFXb3Jrc2hvcC0ke2Vudmlyb25tZW50fWAsIHtcbiAgZW52OiB7IFxuICAgIGFjY291bnQ6IGFjY291bnQsIFxuICAgIHJlZ2lvbjogcmVnaW9uXG4gIH0sXG4gIGRlc2NyaXB0aW9uOiBgTlIgSW5zdHJ1bWVudGVkIExhbWJkYSBGbnMgLSAke2Vudmlyb25tZW50fSBlbnZpcm9ubWVudGAsXG4gIC8vIEFkZCBzdGFjayB0YWdzIGZvciBiZXR0ZXIgcmVzb3VyY2UgbWFuYWdlbWVudFxuICB0YWdzOiB7XG4gICAgRW52aXJvbm1lbnQ6IGVudmlyb25tZW50LFxuICAgIFByb2plY3Q6ICdOUkxhbWJkYVdvcmtzaG9wJyxcbiAgICBNYW5hZ2VkQnk6ICdDREsnLFxuICAgIFdvcmtzaG9wOiBcIkFXUyBDREsgQURPVCBXb3Jrc2hvcFwiLFxuICB9XG59KTtcblxuLy8gTG9nIGRlcGxveW1lbnQgaW5mb3JtYXRpb25cbmNvbnNvbGUubG9nKGBEZXBsb3lpbmcgTlJMYW1iZGFXb3Jrc2hvcCB0byAke2Vudmlyb25tZW50fSBlbnZpcm9ubWVudCBpbiAke3JlZ2lvbn1gKTtcbiJdfQ==
