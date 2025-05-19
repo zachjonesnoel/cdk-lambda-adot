@@ -12,3 +12,9 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk deploy`  deploy this stack to your default AWS account/region
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
+
+
+# Serverless API 
+![Architecture Diagram](architecturediagram.png)
+
+A simple Serverless API with API Gateway and Lambda function which is invoking another Serverless API for an hello world message

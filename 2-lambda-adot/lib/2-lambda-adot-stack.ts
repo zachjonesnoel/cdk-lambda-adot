@@ -20,17 +20,12 @@ export class OtelAdotStack extends cdk.Stack {
     const adotLayerArn = this.node.tryGetContext('adotLayerVersion') || 'arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-30-1:2';
     const nrLicenseKey = this.node.tryGetContext('nrLicenseKey') || 'MISSING_LICENSE_KEY';
 
-    let ADOTLayer = lambda.LayerVersion.fromLayerVersionArn(
-        this,
-        'AODTLayer',
-        adotLayerArn
-      )
     // Create a simple Lambda function with API Gateway integration that returns a greeting message
     const greetingLambda = new lambda.Function(this, 'GreetingLambda', {
       runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/greeting-lambda')),
       handler: 'greeting.handler',
-      architecture: lambda.Architecture.ARM_64,
+      architecture: lambda.Architecture.X86_64,
       environment: {
         ENVIRONMENT: environment,
         SERVICE_NAME: serviceName,
@@ -41,7 +36,7 @@ export class OtelAdotStack extends cdk.Stack {
       },
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      memorySize: 128,
+      memorySize: 256,
       timeout: cdk.Duration.seconds(5),
       adotInstrumentation: {
         layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
@@ -88,7 +83,7 @@ export class OtelAdotStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/invoker-lambda')),
       handler: 'index.handler',
-      architecture: lambda.Architecture.ARM_64,
+      architecture: lambda.Architecture.X86_64,
       environment: {
         GREETING_API_ENDPOINT: greetingApi.apiEndpoint,
         ENVIRONMENT: environment,
@@ -96,7 +91,6 @@ export class OtelAdotStack extends cdk.Stack {
         AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
         OTEL_EXPORTER_OTLP_ENDPOINT: 'https://otlp.nr-data.net:4317',
         OTEL_EXPORTER_OTLP_HEADERS: 'api-key=' + nrLicenseKey,
-        OTEL_LAMBDA_DISABLE_AWS_CONTEXT_PROPAGATION: "true",
         OTEL_SERVICE_NAME: serviceName,
       },
       description: `Lambda function for ${serviceName} in ${environment} environment`,
@@ -105,15 +99,17 @@ export class OtelAdotStack extends cdk.Stack {
         layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
         execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
       },
+      memorySize: 256,
+      timeout: cdk.Duration.seconds(6),
     });
 
     // Create HTTP API Gateway
     const lambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration(
-      'OtelAdotIntegration', 
+      'HelloLambdaIntegration', 
       HelloLambdaFunction
     );
 
-    const httpApi = new apigatewayv2.HttpApi(this, 'OtelAdotHttpApi', {
+    const httpApi = new apigatewayv2.HttpApi(this, 'HelloLambdaHttpApi', {
       apiName: `${serviceName}-API-${environment}`,
       description: `HTTP API Gateway for ${serviceName} in ${environment} environment`,
       defaultIntegration: lambdaIntegration,
