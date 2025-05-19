@@ -22,7 +22,7 @@ new NRLambdaWorkshopStack(app, `NRLambdaWorkshop-NR`, {
     Environment: environment,
     Project: 'NRLambdaWorkshop',
     ManagedBy: 'CDK',
-    Workshop: "AWS CDK ADOT Workshop",
+    Workshop: "AWS CDK NR Workshop",
   }
 });
 

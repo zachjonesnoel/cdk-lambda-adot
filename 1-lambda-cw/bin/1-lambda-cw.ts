@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { OtelAdotStack } from '../lib/1-lambda-cw-stack';
+import { LambdaAPIStack } from '../lib/1-lambda-cw-stack';
 
 const app = new cdk.App();
 
@@ -11,7 +11,7 @@ const region = app.node.tryGetContext('region') || process.env.CDK_DEFAULT_REGIO
 const account = app.node.tryGetContext('account') || process.env.CDK_DEFAULT_ACCOUNT;
 
 // Create stack with environment-specific name
-new OtelAdotStack(app, `NRLambdaWorkshop-CW`, {
+new LambdaAPIStack(app, `NRLambdaWorkshop-CW`, {
   env: { 
     account: account, 
     region: region
@@ -20,9 +20,9 @@ new OtelAdotStack(app, `NRLambdaWorkshop-CW`, {
   // Add stack tags for better resource management
   tags: {
     Environment: environment,
-    Project: 'OtelAdotLambda',
+    Project: 'NRLambdaWorksho',
     ManagedBy: 'CDK',
-    Workshop: "AWS CDK ADOT Workshop",
+    Workshop: "AWS CDK Workshop",
   }
 });
 

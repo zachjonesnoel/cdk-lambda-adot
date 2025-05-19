@@ -5,7 +5,7 @@ import * as apigatewayv2_integrations from 'aws-cdk-lib/aws-apigatewayv2-integra
 import { Construct } from 'constructs';
 import * as path from 'path';
 
-export class OtelAdotStack extends cdk.Stack {
+export class LambdaAPIStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     
