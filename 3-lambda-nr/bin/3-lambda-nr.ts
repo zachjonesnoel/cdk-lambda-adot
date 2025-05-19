@@ -11,20 +11,20 @@ const region = app.node.tryGetContext('region') || process.env.CDK_DEFAULT_REGIO
 const account = app.node.tryGetContext('account') || process.env.CDK_DEFAULT_ACCOUNT;
 
 // Create stack with environment-specific name
-new NRLambdaWorkshopStack(app, `OtelAdotStack-${environment}`, {
+new NRLambdaWorkshopStack(app, `NRLambdaWorkshop-NR`, {
   env: { 
     account: account, 
     region: region
   },
-  description: `OpenTelemetry Lambda with ADOT - ${environment} environment`,
+  description: `NR Instrumented Lambda Fns - ${environment} environment`,
   // Add stack tags for better resource management
   tags: {
     Environment: environment,
-    Project: 'OtelAdotLambda',
+    Project: 'NRLambdaWorkshop',
     ManagedBy: 'CDK',
     Workshop: "AWS CDK ADOT Workshop",
   }
 });
 
 // Log deployment information
-console.log(`Deploying OtelAdotStack to ${environment} environment in ${region}`);
+console.log(`Deploying NRLambdaWorkshop to ${environment} environment in ${region}`);

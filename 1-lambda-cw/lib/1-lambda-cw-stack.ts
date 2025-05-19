@@ -17,7 +17,7 @@ export class OtelAdotStack extends cdk.Stack {
 
     // Create a simple Lambda function with API Gateway integration that returns a greeting message
     const greetingLambda = new lambda.Function(this, 'GreetingLambda', {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/greeting-lambda')),
       handler: 'greeting.handler',
       architecture: lambda.Architecture.X86_64,
@@ -66,8 +66,8 @@ export class OtelAdotStack extends cdk.Stack {
       exportName: `${id}-GreetingServiceName`
     });
 
-    const OtelAdotLambdaFunction = new lambda.Function(this, 'OtelAdotLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_18_X,
+    const HelloLambdaFunction = new lambda.Function(this, 'HelloLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/invoker-lambda')),
       handler: 'index.handler',
       architecture: lambda.Architecture.X86_64,
@@ -82,7 +82,7 @@ export class OtelAdotStack extends cdk.Stack {
     // Create HTTP API Gateway
     const lambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration(
       'OtelAdotIntegration', 
-      OtelAdotLambdaFunction
+      HelloLambdaFunction
     );
 
     const httpApi = new apigatewayv2.HttpApi(this, 'OtelAdotHttpApi', {
@@ -121,11 +121,11 @@ export class OtelAdotStack extends cdk.Stack {
 
     
     // Add tags to the Lambda function
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Environment', environment);
-    cdk.Tags.of(OtelAdotLambdaFunction).add('ServiceName', serviceName);
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Project', 'OtelAdotLambda');
-    cdk.Tags.of(OtelAdotLambdaFunction).add('ManagedBy', 'CDK');
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Workshop', 'AWS CDK ADOT Workshop');
+    cdk.Tags.of(HelloLambdaFunction).add('Environment', environment);
+    cdk.Tags.of(HelloLambdaFunction).add('ServiceName', serviceName);
+    cdk.Tags.of(HelloLambdaFunction).add('Project', 'OtelAdotLambda');
+    cdk.Tags.of(HelloLambdaFunction).add('ManagedBy', 'CDK');
+    cdk.Tags.of(HelloLambdaFunction).add('Workshop', 'AWS CDK ADOT Workshop');
     // Add tags to the API Gateway
     cdk.Tags.of(httpApi).add('Environment', environment);
     cdk.Tags.of(httpApi).add('ServiceName', serviceName);

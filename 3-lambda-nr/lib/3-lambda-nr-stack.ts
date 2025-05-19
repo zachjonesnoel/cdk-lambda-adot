@@ -14,10 +14,16 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
     const serviceName = this.node.tryGetContext('serviceName') || 'Node-Lambda-NR-Workshop';
     const nrLicenseKey = this.node.tryGetContext('nrLicenseKey') || 'MISSING_LICENSE_KEY';
     const nrAccountID = this.node.tryGetContext('nrAccountID') || 'MISSING_ACCOUNT_ID';
-    const adotLayerArn = this.node.tryGetContext('adotLayerVersion') || 'arn:aws:lambda:us-east-1:451483290750:layer:NewRelicNodeJS18X:115';
+    const nrLayerArn = this.node.tryGetContext('adotLayerVersion') || 'arn:aws:lambda:us-east-1:451483290750:layer:NewRelicNodeJS22X:22';
+
+    let NRLayer = lambda.LayerVersion.fromLayerVersionArn(
+        this,
+        'NRLayer',
+        nrLayerArn
+      )
     // Create a simple Lambda function with API Gateway integration that returns a greeting message
     const greetingLambda = new lambda.Function(this, 'GreetingLambda', {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/greeting-lambda')),
       handler: "newrelic-lambda-wrapper.handler",
       architecture: lambda.Architecture.X86_64,
@@ -27,26 +33,24 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
         NEW_RELIC_ACCOUNT_ID: nrAccountID,
         NEW_RELIC_LAMBDA_HANDLER: 'greeting.handler',
         NEW_RELIC_LICENSE_KEY: nrLicenseKey,
-        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: 'true',
-        NEW_RELIC_LOG_ENABLED: 'true',
-        NEW_RELIC_LOG_LEVEL: 'trace',
-        NEW_RELIC_NATIVE_METRICS_ENABLED: 'true',
+        NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
+        NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
+        NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
+        NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
+        NEW_RELIC_COLLECT_TRACE_ID: "true",
+        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
       },
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
       memorySize: 128,
       timeout: cdk.Duration.seconds(5),
-      layers: [lambda.LayerVersion.fromLayerVersionArn(
-        this,
-        'NRLayer2',
-        adotLayerArn
-      )],
+      layers: [NRLayer],
     });
 
     const greetinglambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration('GreetingIntegration', greetingLambda)
 
     // Create an API Gateway HTTP API
-    const greetingApi = new apigatewayv2.HttpApi(this, 'GreetingApi', {
+    const greetingApi = new apigatewayv2.HttpApi(this, 'GreetingHandler', {
       apiName: `${serviceName}-GreetingAPI-${environment}`,
       description: `Greeting API Gateway for ${serviceName} in ${environment} environment`,
       defaultIntegration: greetinglambdaIntegration,
@@ -78,8 +82,8 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       exportName: `${id}-GreetingServiceName`
     });
 
-    const OtelAdotLambdaFunction = new lambda.Function(this, 'OtelAdotLambdaHandler', {
-      runtime: lambda.Runtime.NODEJS_18_X,
+    const HelloLambdaFunction = new lambda.Function(this, 'HelloLambdaFunction', {
+      runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/invoker-lambda')),
       handler: "newrelic-lambda-wrapper.handler",
       architecture: lambda.Architecture.X86_64,
@@ -89,24 +93,22 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
         NEW_RELIC_ACCOUNT_ID: nrAccountID,
         NEW_RELIC_LAMBDA_HANDLER: 'index.handler',
         NEW_RELIC_LICENSE_KEY: nrLicenseKey,
-        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: 'true',
-        NEW_RELIC_LOG_ENABLED: 'true',
-        NEW_RELIC_LOG_LEVEL: 'trace',
-        NEW_RELIC_NATIVE_METRICS_ENABLED: 'true',
+        NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
+        NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
+        NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
+        NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
+        NEW_RELIC_COLLECT_TRACE_ID: "true",
+        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
       },
       description: `Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      layers: [lambda.LayerVersion.fromLayerVersionArn(
-        this,
-        'NRLayer1',
-        adotLayerArn
-      )],
+      layers: [NRLayer],
     });
 
     // Create HTTP API Gateway
     const lambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration(
       'OtelAdotIntegration',
-      OtelAdotLambdaFunction
+      HelloLambdaFunction
     );
 
     const httpApi = new apigatewayv2.HttpApi(this, 'OtelAdotHttpApi', {
@@ -145,33 +147,33 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
 
 
     // Add tags to the Lambda function
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Environment', environment);
-    cdk.Tags.of(OtelAdotLambdaFunction).add('ServiceName', serviceName);
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Project', 'OtelAdotLambda');
-    cdk.Tags.of(OtelAdotLambdaFunction).add('ManagedBy', 'CDK');
-    cdk.Tags.of(OtelAdotLambdaFunction).add('Workshop', 'AWS CDK ADOT Workshop');
+    cdk.Tags.of(HelloLambdaFunction).add('Environment', environment);
+    cdk.Tags.of(HelloLambdaFunction).add('ServiceName', serviceName);
+    cdk.Tags.of(HelloLambdaFunction).add('Project', 'OtelAdotNR-Workshop');
+    cdk.Tags.of(HelloLambdaFunction).add('ManagedBy', 'CDK');
+    cdk.Tags.of(HelloLambdaFunction).add('Workshop', 'AWS CDK ADOT Workshop');
     // Add tags to the API Gateway
     cdk.Tags.of(httpApi).add('Environment', environment);
     cdk.Tags.of(httpApi).add('ServiceName', serviceName);
-    cdk.Tags.of(httpApi).add('Project', 'OtelAdotLambda');
+    cdk.Tags.of(httpApi).add('Project', 'OtelAdotNR-Workshop');
     cdk.Tags.of(httpApi).add('ManagedBy', 'CDK');
     cdk.Tags.of(httpApi).add('Workshop', 'AWS CDK ADOT Workshop');
     // Add tags to the greeting Lambda function
     cdk.Tags.of(greetingLambda).add('Environment', environment);
     cdk.Tags.of(greetingLambda).add('ServiceName', serviceName);
-    cdk.Tags.of(greetingLambda).add('Project', 'OtelAdotLambda');
+    cdk.Tags.of(greetingLambda).add('Project', 'OtelAdotNR-Workshop');
     cdk.Tags.of(greetingLambda).add('ManagedBy', 'CDK');
     cdk.Tags.of(greetingLambda).add('Workshop', 'AWS CDK ADOT Workshop');
     // Add tags to the greeting API Gateway
     cdk.Tags.of(greetingApi).add('Environment', environment);
     cdk.Tags.of(greetingApi).add('ServiceName', serviceName);
-    cdk.Tags.of(greetingApi).add('Project', 'OtelAdotLambda');
+    cdk.Tags.of(greetingApi).add('Project', 'OtelAdotNR-Workshop');
     cdk.Tags.of(greetingApi).add('ManagedBy', 'CDK');
     cdk.Tags.of(greetingApi).add('Workshop', 'AWS CDK ADOT Workshop');
     // Add tags to the stack
     cdk.Tags.of(this).add('Environment', environment);
     cdk.Tags.of(this).add('ServiceName', serviceName);
-    cdk.Tags.of(this).add('Project', 'OtelAdotLambda');
+    cdk.Tags.of(this).add('Project', 'OtelAdotNR-Workshop');
     cdk.Tags.of(this).add('ManagedBy', 'CDK');
     cdk.Tags.of(this).add('Workshop', 'AWS CDK ADOT Workshop');
 
