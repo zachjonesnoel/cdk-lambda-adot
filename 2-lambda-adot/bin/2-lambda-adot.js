@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("source-map-support/register");
+const cdk = require("aws-cdk-lib");
+const _2_lambda_adot_stack_1 = require("../lib/2-lambda-adot-stack");
+const app = new cdk.App();
+// Get environment context or use defaults
+const environment = app.node.tryGetContext('environment') || 'development';
+const region = app.node.tryGetContext('region') || process.env.CDK_DEFAULT_REGION || 'us-east-1';
+const account = app.node.tryGetContext('account') || process.env.CDK_DEFAULT_ACCOUNT;
+// Create stack with environment-specific name
+new _2_lambda_adot_stack_1.OtelAdotStack(app, `NRLambdaWorkshop-ADOT`, {
+    env: {
+        account: account,
+        region: region
+    },
+    description: `OpenTelemetry Lambda with ADOT - ${environment} environment`,
+    // Add stack tags for better resource management
+    tags: {
+        Environment: environment,
+        Project: 'NRLambdaWorkshop',
+        ManagedBy: 'CDK',
+        Workshop: "AWS CDK ADOT Workshop",
+    }
+});
+// Log deployment information
+console.log(`Deploying NRLambdaWorkshop to ${environment} environment in ${region}`);
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMi1sYW1iZGEtYWRvdC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIjItbGFtYmRhLWFkb3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQ0EsdUNBQXFDO0FBQ3JDLG1DQUFtQztBQUNuQyxxRUFBMkQ7QUFFM0QsTUFBTSxHQUFHLEdBQUcsSUFBSSxHQUFHLENBQUMsR0FBRyxFQUFFLENBQUM7QUFFMUIsMENBQTBDO0FBQzFDLE1BQU0sV0FBVyxHQUFHLEdBQUcsQ0FBQyxJQUFJLENBQUMsYUFBYSxDQUFDLGFBQWEsQ0FBQyxJQUFJLGFBQWEsQ0FBQztBQUMzRSxNQUFNLE1BQU0sR0FBRyxHQUFHLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxRQUFRLENBQUMsSUFBSSxPQUFPLENBQUMsR0FBRyxDQUFDLGtCQUFrQixJQUFJLFdBQVcsQ0FBQztBQUNqRyxNQUFNLE9BQU8sR0FBRyxHQUFHLENBQUMsSUFBSSxDQUFDLGFBQWEsQ0FBQyxTQUFTLENBQUMsSUFBSSxPQUFPLENBQUMsR0FBRyxDQUFDLG1CQUFtQixDQUFDO0FBRXJGLDhDQUE4QztBQUM5QyxJQUFJLG9DQUFhLENBQUMsR0FBRyxFQUFFLHVCQUF1QixFQUFFO0lBQzlDLEdBQUcsRUFBRTtRQUNILE9BQU8sRUFBRSxPQUFPO1FBQ2hCLE1BQU0sRUFBRSxNQUFNO0tBQ2Y7SUFDRCxXQUFXLEVBQUUsb0NBQW9DLFdBQVcsY0FBYztJQUMxRSxnREFBZ0Q7SUFDaEQsSUFBSSxFQUFFO1FBQ0osV0FBVyxFQUFFLFdBQVc7UUFDeEIsT0FBTyxFQUFFLGtCQUFrQjtRQUMzQixTQUFTLEVBQUUsS0FBSztRQUNoQixRQUFRLEVBQUUsdUJBQXVCO0tBQ2xDO0NBQ0YsQ0FBQyxDQUFDO0FBRUgsNkJBQTZCO0FBQzdCLE9BQU8sQ0FBQyxHQUFHLENBQUMsaUNBQWlDLFdBQVcsbUJBQW1CLE1BQU0sRUFBRSxDQUFDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIjIS91c3IvYmluL2VudiBub2RlXG5pbXBvcnQgJ3NvdXJjZS1tYXAtc3VwcG9ydC9yZWdpc3Rlcic7XG5pbXBvcnQgKiBhcyBjZGsgZnJvbSAnYXdzLWNkay1saWInO1xuaW1wb3J0IHsgT3RlbEFkb3RTdGFjayB9IGZyb20gJy4uL2xpYi8yLWxhbWJkYS1hZG90LXN0YWNrJztcblxuY29uc3QgYXBwID0gbmV3IGNkay5BcHAoKTtcblxuLy8gR2V0IGVudmlyb25tZW50IGNvbnRleHQgb3IgdXNlIGRlZmF1bHRzXG5jb25zdCBlbnZpcm9ubWVudCA9IGFwcC5ub2RlLnRyeUdldENvbnRleHQoJ2Vudmlyb25tZW50JykgfHwgJ2RldmVsb3BtZW50JztcbmNvbnN0IHJlZ2lvbiA9IGFwcC5ub2RlLnRyeUdldENvbnRleHQoJ3JlZ2lvbicpIHx8IHByb2Nlc3MuZW52LkNES19ERUZBVUxUX1JFR0lPTiB8fCAndXMtZWFzdC0xJztcbmNvbnN0IGFjY291bnQgPSBhcHAubm9kZS50cnlHZXRDb250ZXh0KCdhY2NvdW50JykgfHwgcHJvY2Vzcy5lbnYuQ0RLX0RFRkFVTFRfQUNDT1VOVDtcblxuLy8gQ3JlYXRlIHN0YWNrIHdpdGggZW52aXJvbm1lbnQtc3BlY2lmaWMgbmFtZVxubmV3IE90ZWxBZG90U3RhY2soYXBwLCBgTlJMYW1iZGFXb3Jrc2hvcC1BRE9UYCwge1xuICBlbnY6IHsgXG4gICAgYWNjb3VudDogYWNjb3VudCwgXG4gICAgcmVnaW9uOiByZWdpb25cbiAgfSxcbiAgZGVzY3JpcHRpb246IGBPcGVuVGVsZW1ldHJ5IExhbWJkYSB3aXRoIEFET1QgLSAke2Vudmlyb25tZW50fSBlbnZpcm9ubWVudGAsXG4gIC8vIEFkZCBzdGFjayB0YWdzIGZvciBiZXR0ZXIgcmVzb3VyY2UgbWFuYWdlbWVudFxuICB0YWdzOiB7XG4gICAgRW52aXJvbm1lbnQ6IGVudmlyb25tZW50LFxuICAgIFByb2plY3Q6ICdOUkxhbWJkYVdvcmtzaG9wJyxcbiAgICBNYW5hZ2VkQnk6ICdDREsnLFxuICAgIFdvcmtzaG9wOiBcIkFXUyBDREsgQURPVCBXb3Jrc2hvcFwiLFxuICB9XG59KTtcblxuLy8gTG9nIGRlcGxveW1lbnQgaW5mb3JtYXRpb25cbmNvbnNvbGUubG9nKGBEZXBsb3lpbmcgTlJMYW1iZGFXb3Jrc2hvcCB0byAke2Vudmlyb25tZW50fSBlbnZpcm9ubWVudCBpbiAke3JlZ2lvbn1gKTtcbiJdfQ==
