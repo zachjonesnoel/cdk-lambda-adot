@@ -42,8 +42,8 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       },
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      memorySize: 128,
-      timeout: cdk.Duration.seconds(5),
+      memorySize: 256,
+      timeout: cdk.Duration.seconds(15),
       // layers: [NRLayer],
     });
 
@@ -103,6 +103,8 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       description: `Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
       // layers: [NRLayer],
+      memorySize: 256,
+      timeout: cdk.Duration.seconds(15),
     });
 
     // Create HTTP API Gateway

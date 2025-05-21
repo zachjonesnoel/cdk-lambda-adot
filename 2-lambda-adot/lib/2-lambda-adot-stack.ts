@@ -38,7 +38,7 @@ export class OtelAdotStack extends cdk.Stack {
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
       memorySize: 256,
-      timeout: cdk.Duration.seconds(5),
+      timeout: cdk.Duration.seconds(15),
       // adotInstrumentation: {
       //   layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
       //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
@@ -102,7 +102,7 @@ export class OtelAdotStack extends cdk.Stack {
       //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
       // },
       memorySize: 256,
-      timeout: cdk.Duration.seconds(6),
+      timeout: cdk.Duration.seconds(15),
     });
 
     // Create HTTP API Gateway
