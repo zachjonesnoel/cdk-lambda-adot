@@ -1,6 +1,8 @@
 lib/*.js
 bin/*.js
 !jest.config.js
+!greeting.js
+!index.js
 *.d.ts
 node_modules
 

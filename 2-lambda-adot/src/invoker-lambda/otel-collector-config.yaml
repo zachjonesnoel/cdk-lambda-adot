@@ -1,26 +1,26 @@
 #collector.yaml in the root directory
 #Set an environment variable 'OPENTELEMETRY_COLLECTOR_CONFIG_URI' to '/var/task/collector.yaml'
 
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 'localhost:4317'
-      http:
-        endpoint: 'localhost:4318'
+# receivers:
+#   otlp:
+#     protocols:
+#       grpc:
+#         endpoint: 'localhost:4317'
+#       http:
+#         endpoint: 'localhost:4318'
 
-exporters:
-  debug:
-  awsxray:
+# exporters:
+#   debug:
+#   awsxray:
 
-service:
-  pipelines:
-    traces:
-      receivers: [otlp]
-      exporters: [awsxray]
-    metrics:
-      receivers: [otlp]
-      exporters: [debug]
-  telemetry:
-    metrics:
-      address: localhost:8888
+# service:
+#   pipelines:
+#     traces:
+#       receivers: [otlp]
+#       exporters: [awsxray]
+#     metrics:
+#       receivers: [otlp]
+#       exporters: [debug]
+#   telemetry:
+#     metrics:
+#       address: localhost:8888

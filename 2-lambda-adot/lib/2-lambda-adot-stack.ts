@@ -29,20 +29,20 @@ export class OtelAdotStack extends cdk.Stack {
       environment: {
         ENVIRONMENT: environment,
         SERVICE_NAME: serviceName,
-        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
-        OTEL_EXPORTER_OTLP_ENDPOINT: 'https://otlp.nr-data.net:4317',
-        OTEL_EXPORTER_OTLP_HEADERS: 'api-key=' + nrLicenseKey,
-        OTEL_SERVICE_NAME: serviceName,
-        OPENTELEMETRY_COLLECTOR_CONFIG_URI: '/var/task/otel-collector-config.yaml',
+        // AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
+        // OTEL_EXPORTER_OTLP_ENDPOINT: 'https://otlp.nr-data.net:4317',
+        // OTEL_EXPORTER_OTLP_HEADERS: 'api-key=' + nrLicenseKey,
+        // OTEL_SERVICE_NAME: serviceName,
+        // OPENTELEMETRY_COLLECTOR_CONFIG_URI: '/var/task/otel-collector-config.yaml',
       },
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
       memorySize: 256,
       timeout: cdk.Duration.seconds(5),
-      adotInstrumentation: {
-        layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
-        execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
-      },
+      // adotInstrumentation: {
+      //   layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
+      //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
+      // },
     });
 
     const greetinglambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration('GreetingIntegration', greetingLambda)
@@ -89,18 +89,18 @@ export class OtelAdotStack extends cdk.Stack {
         GREETING_API_ENDPOINT: greetingApi.apiEndpoint,
         ENVIRONMENT: environment,
         SERVICE_NAME: serviceName,
-        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
-        OTEL_EXPORTER_OTLP_ENDPOINT: 'https://otlp.nr-data.net:4317',
-        OTEL_EXPORTER_OTLP_HEADERS: 'api-key=' + nrLicenseKey,
-        OTEL_SERVICE_NAME: serviceName,
-        OPENTELEMETRY_COLLECTOR_CONFIG_URI: '/var/task/otel-collector-config.yaml',
+        // AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
+        // OTEL_EXPORTER_OTLP_ENDPOINT: 'https://otlp.nr-data.net:4317',
+        // OTEL_EXPORTER_OTLP_HEADERS: 'api-key=' + nrLicenseKey,
+        // OTEL_SERVICE_NAME: serviceName,
+        // OPENTELEMETRY_COLLECTOR_CONFIG_URI: '/var/task/otel-collector-config.yaml',
       },
       description: `Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      adotInstrumentation: {
-        layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
-        execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
-      },
+      // adotInstrumentation: {
+      //   layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
+      //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
+      // },
       memorySize: 256,
       timeout: cdk.Duration.seconds(6),
     });
