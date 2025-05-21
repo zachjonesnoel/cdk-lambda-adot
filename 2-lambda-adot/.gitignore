@@ -1,5 +1,5 @@
-lib/*.js
-bin/*.js
+*.js
+*.js
 !jest.config.js
 !greeting.js
 !index.js

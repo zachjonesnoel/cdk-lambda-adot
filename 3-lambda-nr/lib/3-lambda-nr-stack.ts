@@ -15,12 +15,12 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
     const nrLicenseKey = this.node.tryGetContext('nrLicenseKey') || 'MISSING_LICENSE_KEY';
     const nrAccountID = this.node.tryGetContext('nrAccountID') || 'MISSING_ACCOUNT_ID';
     const nrLayerArn = this.node.tryGetContext('adotLayerVersion') || 'arn:aws:lambda:us-east-1:451483290750:layer:NewRelicNodeJS22X:22';
-
-    let NRLayer = lambda.LayerVersion.fromLayerVersionArn(
-        this,
-        'NRLayer',
-        nrLayerArn
-      )
+    // Uncomment the below line to use New Relic Lambda Extension and Lambda Layer along with enviornment variables
+    // let NRLayer = lambda.LayerVersion.fromLayerVersionArn(
+    //     this,
+    //     'NRLayer',
+    //     nrLayerArn
+    //   )
     // Create a simple Lambda function with API Gateway integration that returns a greeting message
     const greetingLambda = new lambda.Function(this, 'GreetingLambda', {
       runtime: lambda.Runtime.NODEJS_22_X,
@@ -30,21 +30,21 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       environment: {
         ENVIRONMENT: environment,
         SERVICE_NAME: serviceName,
-        NEW_RELIC_ACCOUNT_ID: nrAccountID,
-        NEW_RELIC_LAMBDA_HANDLER: 'greeting.handler',
-        NEW_RELIC_LICENSE_KEY: nrLicenseKey,
-        NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
-        NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
-        NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
-        NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
-        NEW_RELIC_COLLECT_TRACE_ID: "true",
-        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
+        // NEW_RELIC_ACCOUNT_ID: nrAccountID,
+        // NEW_RELIC_LAMBDA_HANDLER: 'greeting.handler',
+        // NEW_RELIC_LICENSE_KEY: nrLicenseKey,
+        // NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
+        // NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
+        // NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
+        // NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
+        // NEW_RELIC_COLLECT_TRACE_ID: "true",
+        // NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
       },
       description: `Greeting Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
       memorySize: 128,
       timeout: cdk.Duration.seconds(5),
-      layers: [NRLayer],
+      // layers: [NRLayer],
     });
 
     const greetinglambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration('GreetingIntegration', greetingLambda)
@@ -81,7 +81,7 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       description: 'Greeting Lambda service name used for telemetry',
       exportName: `${id}-GreetingServiceName`
     });
-
+    // Uncomment the line 93-101 and 105 to use New Relic Lambda Extension and Lambda Layer along with enviornment variables
     const HelloLambdaFunction = new lambda.Function(this, 'HelloLambdaFunction', {
       runtime: lambda.Runtime.NODEJS_22_X,
       code: lambda.Code.fromAsset(path.join(__dirname, '../src/invoker-lambda')),
@@ -90,19 +90,19 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       environment: {
         ENVIRONMENT: environment,
         GREETING_API_ENDPOINT: greetingApi.apiEndpoint,
-        NEW_RELIC_ACCOUNT_ID: nrAccountID,
-        NEW_RELIC_LAMBDA_HANDLER: 'index.handler',
-        NEW_RELIC_LICENSE_KEY: nrLicenseKey,
-        NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
-        NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
-        NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
-        NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
-        NEW_RELIC_COLLECT_TRACE_ID: "true",
-        NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
+        // NEW_RELIC_ACCOUNT_ID: nrAccountID,
+        // NEW_RELIC_LAMBDA_HANDLER: 'index.handler',
+        // NEW_RELIC_LICENSE_KEY: nrLicenseKey,
+        // NEW_RELIC_EXTENSION_LOG_LEVEL: "DEBUG",
+        // NEW_RELIC_EXTENSION_SEND_EXTENSION_LOGS: "true",
+        // NEW_RELIC_EXTENSION_SEND_FUNCTION_LOGS: "true",
+        // NEW_RELIC_EXTENSION_LOGS_ENABLED: "true",
+        // NEW_RELIC_COLLECT_TRACE_ID: "true",
+        // NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true",
       },
       description: `Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      layers: [NRLayer],
+      // layers: [NRLayer],
     });
 
     // Create HTTP API Gateway
