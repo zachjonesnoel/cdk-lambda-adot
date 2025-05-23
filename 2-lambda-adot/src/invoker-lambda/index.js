@@ -6,6 +6,9 @@ exports.handler = async (event) => {
     
     try {
         // span.setAttribute('lambda.environment', process.env.ENVIRONMENT);
+        // span.setAttribute('context', 'invoker-lambda');
+        // span.setAttribute('hop', 'hop-1');
+
         console.log('Event: ', event);
 
         let responseBody = JSON.stringify({
