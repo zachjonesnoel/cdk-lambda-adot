@@ -147,6 +147,38 @@ export class NRLambdaWorkshopStack extends cdk.Stack {
       exportName: `${id}-ServiceName`
     });
 
+    new cdk.CfnOutput(this, 'HelloLambdaFunctionArn', {
+      value: HelloLambdaFunction.functionArn,
+      description: 'Hello Lambda function ARN',
+      exportName: `${id}-HelloLambdaFunctionArn`
+    });
+    new cdk.CfnOutput(this, 'HelloLambdaFunctionName', {
+      value: HelloLambdaFunction.functionName,
+      description: 'Hello Lambda function name',
+      exportName: `${id}-HelloLambdaFunctionName`
+    });
+    new cdk.CfnOutput(this, 'HelloLambdaFunctionIAM', {
+      value: HelloLambdaFunction.role?.roleArn || 'No IAM role',
+      description: 'Hello Lambda function IAM role ARN',
+      exportName: `${id}-HelloLambdaFunctionIAM`
+    });
+
+    new cdk.CfnOutput(this, 'GreetingLambdaFunctionArn', {
+      value: greetingLambda.functionArn,
+      description: 'Greeting Lambda function ARN',
+      exportName: `${id}-GreetingLambdaFunctionArn`
+    });
+    new cdk.CfnOutput(this, 'GreetingLambdaFunctionName', {
+      value: greetingLambda.functionName,
+      description: 'Greeting Lambda function name',
+      exportName: `${id}-GreetingLambdaFunctionName`
+    });
+    new cdk.CfnOutput(this, 'GreetingLambdaFunctionIAM', {
+      value: greetingLambda.role?.roleArn || 'No IAM role',
+      description: 'Greeting Lambda function IAM role ARN',
+      exportName: `${id}-GreetingLambdaFunctionIAM`
+    });
+    
 
     // Add tags to the Lambda function
     cdk.Tags.of(HelloLambdaFunction).add('Environment', environment);
