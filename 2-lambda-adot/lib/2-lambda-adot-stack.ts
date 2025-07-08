@@ -20,6 +20,12 @@ export class OtelAdotStack extends cdk.Stack {
     const adotLayerArn = this.node.tryGetContext('adotLayerVersion') || 'arn:aws:lambda:us-east-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-30-1:2';
     const nrLicenseKey = this.node.tryGetContext('nrLicenseKey') || 'MISSING_LICENSE_KEY';
 
+    let ADOTLayer = lambda.LayerVersion.fromLayerVersionArn(
+        this,
+        'ADOTLayer',
+        adotLayerArn
+      )
+
     // Create a simple Lambda function with API Gateway integration that returns a greeting message
     const greetingLambda = new lambda.Function(this, 'GreetingLambda', {
       runtime: lambda.Runtime.NODEJS_22_X,
@@ -39,10 +45,7 @@ export class OtelAdotStack extends cdk.Stack {
       tracing: lambda.Tracing.ACTIVE,
       memorySize: 256,
       timeout: cdk.Duration.seconds(15),
-      // adotInstrumentation: {
-      //   layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
-      //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
-      // },
+      // layers: [ADOTLayer],
     });
 
     const greetinglambdaIntegration = new apigatewayv2_integrations.HttpLambdaIntegration('GreetingIntegration', greetingLambda)
@@ -70,7 +73,7 @@ export class OtelAdotStack extends cdk.Stack {
     // Output the environment
     new cdk.CfnOutput(this, 'GreetingEnvironment', {
       value: environment,
-      description: 'Greeting Lambda deployment environment',
+      description: 'Greeting Lambda deployment environment',       
       exportName: `${id}-GreetingEnvironment`
     });
     // Output the service name
@@ -97,10 +100,7 @@ export class OtelAdotStack extends cdk.Stack {
       },
       description: `Lambda function for ${serviceName} in ${environment} environment`,
       tracing: lambda.Tracing.ACTIVE,
-      // adotInstrumentation: {
-      //   layerVersion: AdotLayerVersion.fromJavaScriptSdkLayerVersion(AdotLambdaLayerJavaScriptSdkVersion.LATEST),
-      //   execWrapper: AdotLambdaExecWrapper.REGULAR_HANDLER,
-      // },
+      // layers: [ADOTLayer],
       memorySize: 256,
       timeout: cdk.Duration.seconds(15),
     });
